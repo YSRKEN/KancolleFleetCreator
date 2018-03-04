@@ -5,13 +5,16 @@
     <RootNamespace>KFC</RootNamespace>
     <PackageVersion>1.0</PackageVersion>
     <Title>KFC</Title>
-    <Copyright>Copyright © 2018</Copyright>
-    <Description>Description of KFC</Description>
+    <Copyright>Copyright © 2018 YSR</Copyright>
+    <Description>『艦隊これくしょん～艦これ～』において、
+複数のスクショを束ねて編成まとめ画像を作成するソフトです。</Description>
+    <NeutralLanguage>ja-JP</NeutralLanguage>
   </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="Eto.Forms" Version="2.4.1" />
     <PackageReference Include="Eto.Serialization.Xaml" Version="2.4.1" />
+    <PackageReference Include="ReactiveProperty" Version="4.2.0" />
   </ItemGroup>
   
 </Project>

@@ -11,25 +11,28 @@ namespace KFC
 		public MainForm()
 		{
 			XamlReader.Load(this);
+			this.DataContext = new MainViewModel();
 			this.Menu.ApplicationMenu.Text = "ファイル(&F)";
 			this.Menu.QuitItem.Text = "終了(&X)";
 			this.Menu.HelpMenu.Text = "ヘルプ(&H)";
 			this.Menu.AboutItem.Text = "バージョン情報(&V)";
 		}
 
-		protected void HandleClickMe(object sender, EventArgs e)
-		{
-			MessageBox.Show("I was clicked!");
+		protected void LoadPiecePicture(object sender, EventArgs e)
+			=> (this.DataContext as MainViewModel).LoadPiecePictureCommand.Execute();
+		protected void CreateFormationPicture(object sender, EventArgs e)
+			=> (this.DataContext as MainViewModel).CreateFormationPictureCommand.Execute();
+		protected void DeleteDataAll(object sender, EventArgs e)
+			=> (this.DataContext as MainViewModel).DeleteDataAllCommand.Execute();
+		protected void HandleAbout(object sender, EventArgs e) {
+			var dialog = new AboutDialog() {
+				Title = "バージョン情報",
+				ProgramName = "艦これ編成まとめ隊", License = "MIT License",
+				Website = new Uri("https://github.com/YSRKEN/"), WebsiteLabel = "GitHub"
+			};
+			dialog.ShowDialog(this);
 		}
-
-		protected void HandleAbout(object sender, EventArgs e)
-		{
-			new AboutDialog().ShowDialog(this);
-		}
-
 		protected void HandleQuit(object sender, EventArgs e)
-		{
-			Application.Instance.Quit();
-		}
+			=> Application.Instance.Quit();
 	}
 }
