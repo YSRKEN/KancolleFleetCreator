@@ -2,22 +2,56 @@
 <Form
 	xmlns="http://schema.picoe.ca/eto.forms" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	Title="My Eto Form"
-	ClientSize="400, 350"
+	Title="艦これ編成まとめ隊"
 	Padding="10"
 	>
 	<StackLayout>
-		<Label>Some Content</Label>
+		<StackLayout Orientation="Horizontal" Spacing="5">
+			<GroupBox Text="自艦隊">
+				<StackLayout Spacing="5" HorizontalContentAlignment="Center">
+					<ListBox/>
+					<StackLayout Orientation="Horizontal" Spacing="5">
+						<Button Text="＋" Size="24,24"/>
+						<Button Text="↑" Size="24,24"/>
+						<Button Text="↓" Size="24,24"/>
+					</StackLayout>
+					<CheckBox Text="表示する" Checked="True"/>
+				</StackLayout>
+			</GroupBox>
+			<GroupBox Text="支援艦隊">
+				<StackLayout Spacing="5" HorizontalContentAlignment="Center">
+					<ListBox/>
+					<StackLayout Orientation="Horizontal" Spacing="5">
+						<Button Text="＋" Size="24,24"/>
+						<Button Text="↑" Size="24,24"/>
+						<Button Text="↓" Size="24,24"/>
+					</StackLayout>
+					<CheckBox Text="表示する" Checked="True"/>
+				</StackLayout>
+			</GroupBox>
+			<GroupBox Text="基地航空隊">
+				<StackLayout Spacing="5" HorizontalContentAlignment="Center">
+					<ListBox/>
+					<StackLayout Orientation="Horizontal" Spacing="5">
+						<Button Text="＋" Size="24,24"/>
+						<Button Text="↑" Size="24,24"/>
+						<Button Text="↓" Size="24,24"/>
+					</StackLayout>
+					<CheckBox Text="表示する" Checked="True"/>
+				</StackLayout>
+			</GroupBox>
+		</StackLayout>
+		<GroupBox Text="プレビュー">
+			<ImageView/>
+		</GroupBox>
 	</StackLayout>
 
 	<Form.Menu>
 		<MenuBar>
 			<ButtonMenuItem Text="F&amp;ile">
-				<ButtonMenuItem Text="Click Me!" Click="HandleClickMe" />
+				<ButtonMenuItem Text="画像作成(&amp;C)" Click="HandleClickMe" />
+				<ButtonMenuItem Text="全消去(&amp;A)" Click="HandleClickMe" />
 			</ButtonMenuItem>
-			<MenuBar.ApplicationItems>
-				<ButtonMenuItem Text="Preferences.." Shortcut="{On Control+O, Mac=Application+Comma}" />
-			</MenuBar.ApplicationItems>
 			<MenuBar.QuitItem>
 				<ButtonMenuItem Text="Quit" Shortcut="CommonModifier+Q" Click="HandleQuit" />
 			</MenuBar.QuitItem>
@@ -28,7 +62,9 @@
 	</Form.Menu>
 	<Form.ToolBar>
 		<ToolBar>
-			<ButtonToolItem Text="Click Me!" Click="HandleClickMe" />
+			<ButtonToolItem Text="画像作成" Click="HandleClickMe" />
+			<SeparatorToolItem/>
+			<ButtonToolItem Text="全消去" Click="HandleClickMe" />
 		</ToolBar>
 	</Form.ToolBar>
 </Form>

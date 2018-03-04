@@ -11,6 +11,10 @@ namespace KFC
 		public MainForm()
 		{
 			XamlReader.Load(this);
+			this.Menu.ApplicationMenu.Text = "ファイル(&F)";
+			this.Menu.QuitItem.Text = "終了(&X)";
+			this.Menu.HelpMenu.Text = "ヘルプ(&H)";
+			this.Menu.AboutItem.Text = "バージョン情報(&V)";
 		}
 
 		protected void HandleClickMe(object sender, EventArgs e)
