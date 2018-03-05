@@ -40,8 +40,11 @@
 					<CheckBox Text="表示する" Checked="True"/>
 				</StackLayout>
 			</GroupBox>
+			<GroupBox Text="プレビュー" Visible="{Binding PreviewImageFlg1.Value}">
+				<ImageView Image="{Binding PreviewImage.Value}"/>
+			</GroupBox>
 		</StackLayout>
-		<GroupBox Text="プレビュー" Visible="{Binding PreviewImageFlg.Value}">
+		<GroupBox Text="プレビュー" Visible="{Binding PreviewImageFlg2.Value}">
 			<ImageView Image="{Binding PreviewImage.Value}"/>
 		</GroupBox>
 	</StackLayout>
