@@ -41,8 +41,8 @@
 				</StackLayout>
 			</GroupBox>
 		</StackLayout>
-		<GroupBox Text="プレビュー">
-			<ImageView/>
+		<GroupBox Text="プレビュー" Visible="{Binding PreviewImageFlg.Value}">
+			<ImageView Image="{Binding PreviewImage.Value}"/>
 		</GroupBox>
 	</StackLayout>
 

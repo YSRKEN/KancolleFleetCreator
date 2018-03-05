@@ -7,7 +7,7 @@ using Eto.Serialization.Xaml;
 namespace KFC
 {	
 	public class MainForm : Form
-	{	
+	{
 		public MainForm()
 		{
 			XamlReader.Load(this);
