@@ -1,6 +1,8 @@
 ﻿using System;
 using Eto.Forms;
 using Eto.Drawing;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace KFC.Desktop
 {
@@ -9,7 +11,11 @@ namespace KFC.Desktop
 		[STAThread]
 		static void Main(string[] args)
 		{
-			new Application(Eto.Platform.Detect).Run(new MainForm());
+			var app = new Application(Eto.Platform.Detect);
+			if (app.Platform.IsWpf) {
+				SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext());
+			}
+			app.Run(new MainForm());
 		}
 	}
 }

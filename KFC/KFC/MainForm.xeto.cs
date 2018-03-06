@@ -18,8 +18,14 @@ namespace KFC
 			this.Menu.AboutItem.Text = "ƒo[ƒWƒ‡ƒ“î•ñ(&V)";
 		}
 
-		protected void LoadPiecePicture(object sender, EventArgs e)
-			=> (this.DataContext as MainViewModel).LoadPiecePictureCommand.Execute();
+		protected void LoadPiecePicture(object sender, EventArgs e) {
+			using(var dialog = new OpenFileDialog()) {
+				if (dialog.ShowDialog(this) != DialogResult.Ok)
+					return;
+				var image = new Bitmap(dialog.FileName);
+				(this.DataContext as MainViewModel).SetPreViewImage(image);
+			}
+		}
 		protected void CreateFormationPicture(object sender, EventArgs e)
 			=> (this.DataContext as MainViewModel).CreateFormationPictureCommand.Execute();
 		protected void DeleteDataAll(object sender, EventArgs e)
