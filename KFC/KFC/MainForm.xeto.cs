@@ -5,13 +5,14 @@ using Eto.Drawing;
 using Eto.Serialization.Xaml;
 
 namespace KFC
-{	
+{
+	public delegate string GetFileName();
 	public class MainForm : Form
 	{
 		public MainForm()
 		{
 			XamlReader.Load(this);
-			this.DataContext = new MainViewModel();
+			this.DataContext = new MainViewModel(GetFileNameFromDialog);
 			this.Menu.ApplicationMenu.Text = "ファイル(&F)";
 			this.Menu.QuitItem.Text = "終了(&X)";
 			this.Menu.HelpMenu.Text = "ヘルプ(&H)";
@@ -40,5 +41,13 @@ namespace KFC
 		}
 		protected void HandleQuit(object sender, EventArgs e)
 			=> Application.Instance.Quit();
+
+		private string GetFileNameFromDialog() {
+			using (var dialog = new OpenFileDialog()) {
+				if (dialog.ShowDialog(this) != DialogResult.Ok)
+					return "";
+				return dialog.FileName;
+			}
+		}
 	}
 }

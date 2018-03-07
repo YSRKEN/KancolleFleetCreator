@@ -8,12 +8,15 @@ using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using static KFC.Utility;
 
 namespace KFC
 {
 	class MainViewModel : INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
+
+		private Dictionary<string, Bitmap> piecePictureData = new Dictionary<string, Bitmap>();
 
 		// プロパティ
 		public ReactiveProperty<Image> PreviewImage { get; } = new ReactiveProperty<Image>();
@@ -48,17 +51,52 @@ namespace KFC
 		public void SetPreViewImage(Image image) {
 			PreviewImage.Value = image;
 		}
+		// 画像ファイルを追加する
+		// ただし種別による選別は施す(当てはまらない画像データはインポートしないように設定)
+		private void AddPiecePicture(GetFileName funcGFN, PiecePictureType ppt) {
+			string fileName = funcGFN();
+			if (fileName == "")
+				return;
+			try {
+				var image = new Bitmap(fileName);
+				string key = System.IO.Path.GetFileNameWithoutExtension(fileName);
+				if (piecePictureData.ContainsKey(key)) {
+					for(int i = 1; ; ++i) {
+						string key2 = $"{key}_{i}";
+						if (!piecePictureData.ContainsKey(key2)) {
+							key = key2;
+							break;
+						}
+					}
+				}
+				piecePictureData[key] = image;
+				switch (ppt) {
+				case PiecePictureType.Main:
+					PiecePictureList1.Add(key);
+					break;
+				case PiecePictureType.Base:
+					PiecePictureList2.Add(key);
+					break;
+					break;
+				case PiecePictureType.Support:
+					PiecePictureList3.Add(key);
+					break;
+				}
+			} catch(Exception e) {
+				Console.WriteLine(e.Message);
+			}
+		}
 
 		// コンストラクタ
-		public MainViewModel() {
+		public MainViewModel(GetFileName funcGFN) {
 			PreviewImageFlg1 = PreviewImage.Select(p => p != null && p.Width < p.Height).ToReadOnlyReactiveProperty();
 			PreviewImageFlg2 = PreviewImage.Select(p => p != null && p.Width >= p.Height).ToReadOnlyReactiveProperty();
 			//
 			CreateFormationPictureCommand.Subscribe(_ => { MessageBox.Show("画像作成"); });
 			DeleteDataAllCommand.Subscribe(_ => { MessageBox.Show("全消去"); });
-			AddPiecePicture1Command.Subscribe(_ => { MessageBox.Show("画像追加"); });
-			AddPiecePicture2Command.Subscribe(_ => { MessageBox.Show("画像追加"); });
-			AddPiecePicture3Command.Subscribe(_ => { MessageBox.Show("画像追加"); });
+			AddPiecePicture1Command.Subscribe(_ => { AddPiecePicture(funcGFN, PiecePictureType.Main); });
+			AddPiecePicture2Command.Subscribe(_ => { AddPiecePicture(funcGFN, PiecePictureType.Base); });
+			AddPiecePicture3Command.Subscribe(_ => { AddPiecePicture(funcGFN, PiecePictureType.Support); });
 			DeletePiecePicture1Command.Subscribe(_ => { MessageBox.Show("画像削除"); });
 			DeletePiecePicture2Command.Subscribe(_ => { MessageBox.Show("画像削除"); });
 			DeletePiecePicture3Command.Subscribe(_ => { MessageBox.Show("画像削除"); });
