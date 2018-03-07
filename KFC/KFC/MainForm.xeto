@@ -9,35 +9,35 @@
 		<StackLayout Orientation="Horizontal" Spacing="5">
 			<GroupBox Text="自艦隊">
 				<StackLayout Spacing="5" HorizontalContentAlignment="Center">
-					<ListBox/>
+					<ListBox DataStore="{Binding PiecePictureList1}"/>
 					<StackLayout Orientation="Horizontal" Spacing="5">
-						<Button Text="＋" Size="24,24"/>
-						<Button Text="↑" Size="24,24"/>
-						<Button Text="↓" Size="24,24"/>
+						<Button Text="＋" Size="24,24" Command="{Binding AddPiecePicture1Command}"/>
+						<Button Text="↑" Size="24,24" Command="{Binding MoveUpPiecePicture1Command}"/>
+						<Button Text="↓" Size="24,24" Command="{Binding MoveDownPiecePicture1Command}"/>
 					</StackLayout>
-					<CheckBox Text="表示する" Checked="True"/>
+					<CheckBox Text="表示する" Checked="{Binding ShowImageDataFlg1.Value}"/>
 				</StackLayout>
 			</GroupBox>
 			<GroupBox Text="支援艦隊">
 				<StackLayout Spacing="5" HorizontalContentAlignment="Center">
-					<ListBox/>
+					<ListBox DataStore="{Binding PiecePictureList2}"/>
 					<StackLayout Orientation="Horizontal" Spacing="5">
-						<Button Text="＋" Size="24,24"/>
-						<Button Text="↑" Size="24,24"/>
-						<Button Text="↓" Size="24,24"/>
+						<Button Text="＋" Size="24,24" Command="{Binding AddPiecePicture2Command}"/>
+						<Button Text="↑" Size="24,24" Command="{Binding MoveUpPiecePicture2Command}"/>
+						<Button Text="↓" Size="24,24" Command="{Binding MoveDownPiecePicture2Command}"/>
 					</StackLayout>
-					<CheckBox Text="表示する" Checked="True"/>
+					<CheckBox Text="表示する" Checked="{Binding ShowImageDataFlg2.Value}"/>
 				</StackLayout>
 			</GroupBox>
 			<GroupBox Text="基地航空隊">
 				<StackLayout Spacing="5" HorizontalContentAlignment="Center">
-					<ListBox/>
+					<ListBox DataStore="{Binding PiecePictureList3}"/>
 					<StackLayout Orientation="Horizontal" Spacing="5">
-						<Button Text="＋" Size="24,24"/>
-						<Button Text="↑" Size="24,24"/>
-						<Button Text="↓" Size="24,24"/>
+						<Button Text="＋" Size="24,24" Command="{Binding AddPiecePicture3Command}"/>
+						<Button Text="↑" Size="24,24" Command="{Binding MoveUpPiecePicture3Command}"/>
+						<Button Text="↓" Size="24,24" Command="{Binding MoveDownPiecePicture3Command}"/>
 					</StackLayout>
-					<CheckBox Text="表示する" Checked="True"/>
+					<CheckBox Text="表示する" Checked="{Binding ShowImageDataFlg3.Value}"/>
 				</StackLayout>
 			</GroupBox>
 			<GroupBox Text="プレビュー" Visible="{Binding PreviewImageFlg1.Value}">
