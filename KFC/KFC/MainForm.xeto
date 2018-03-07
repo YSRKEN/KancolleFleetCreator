@@ -9,7 +9,7 @@
 		<StackLayout Orientation="Horizontal" Spacing="5">
 			<GroupBox Text="自艦隊">
 				<StackLayout Spacing="5" HorizontalContentAlignment="Center">
-					<ListBox DataStore="{Binding PiecePictureList1}" Width="150"/>
+					<ListBox DataStore="{Binding PiecePictureList1}" Width="150" SelectedIndex="{Binding PiecePictureIndex1.Value}"/>
 					<StackLayout Orientation="Horizontal" Spacing="5">
 						<Button Text="＋" Size="24,24" Command="{Binding AddPiecePicture1Command}"/>
 						<Button Text="↑" Size="24,24" Command="{Binding MoveUpPiecePicture1Command}"/>
@@ -20,7 +20,7 @@
 			</GroupBox>
 			<GroupBox Text="支援艦隊">
 				<StackLayout Spacing="5" HorizontalContentAlignment="Center">
-					<ListBox DataStore="{Binding PiecePictureList2}" Width="150"/>
+					<ListBox DataStore="{Binding PiecePictureList2}" Width="150" SelectedIndex="{Binding PiecePictureIndex2.Value}"/>
 					<StackLayout Orientation="Horizontal" Spacing="5">
 						<Button Text="＋" Size="24,24" Command="{Binding AddPiecePicture2Command}"/>
 						<Button Text="↑" Size="24,24" Command="{Binding MoveUpPiecePicture2Command}"/>
@@ -31,7 +31,7 @@
 			</GroupBox>
 			<GroupBox Text="基地航空隊">
 				<StackLayout Spacing="5" HorizontalContentAlignment="Center">
-					<ListBox DataStore="{Binding PiecePictureList3}" Width="150"/>
+					<ListBox DataStore="{Binding PiecePictureList3}" Width="150" SelectedIndex="{Binding PiecePictureIndex3.Value}"/>
 					<StackLayout Orientation="Horizontal" Spacing="5">
 						<Button Text="＋" Size="24,24" Command="{Binding AddPiecePicture3Command}"/>
 						<Button Text="↑" Size="24,24" Command="{Binding MoveUpPiecePicture3Command}"/>

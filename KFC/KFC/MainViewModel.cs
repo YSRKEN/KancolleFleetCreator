@@ -25,6 +25,9 @@ namespace KFC
 		public ReactiveProperty<bool> ShowImageDataFlg1 { get; } = new ReactiveProperty<bool>(true);
 		public ReactiveProperty<bool> ShowImageDataFlg2 { get; } = new ReactiveProperty<bool>(true);
 		public ReactiveProperty<bool> ShowImageDataFlg3 { get; } = new ReactiveProperty<bool>(true);
+		public ReactiveProperty<int> PiecePictureIndex1 { get; } = new ReactiveProperty<int>(-1);
+		public ReactiveProperty<int> PiecePictureIndex2 { get; } = new ReactiveProperty<int>(-1);
+		public ReactiveProperty<int> PiecePictureIndex3 { get; } = new ReactiveProperty<int>(-1);
 
 		// コマンド
 		public ReactiveCommand CreateFormationPictureCommand { get; } = new ReactiveCommand();
@@ -59,17 +62,7 @@ namespace KFC
 				return;
 			try {
 				var image = new Bitmap(fileName);
-				string key = System.IO.Path.GetFileNameWithoutExtension(fileName);
-				if (piecePictureData.ContainsKey(key)) {
-					for(int i = 1; ; ++i) {
-						string key2 = $"{key}_{i}";
-						if (!piecePictureData.ContainsKey(key2)) {
-							key = key2;
-							break;
-						}
-					}
-				}
-				piecePictureData[key] = image;
+				piecePictureData[fileName] = image;
 				switch (ppt) {
 				case PiecePictureType.Main:
 					PiecePictureList1.Add(key);
@@ -77,13 +70,88 @@ namespace KFC
 				case PiecePictureType.Base:
 					PiecePictureList2.Add(key);
 					break;
-					break;
 				case PiecePictureType.Support:
 					PiecePictureList3.Add(key);
 					break;
 				}
 			} catch(Exception e) {
 				Console.WriteLine(e.Message);
+			}
+		}
+		// リストの選択項目を上に移動させる
+		private void MoveUpPiecePicture(PiecePictureType ppt) {
+			switch (ppt) {
+			case PiecePictureType.Main:
+				if (PiecePictureIndex1.Value <= 0)
+					return;
+				{
+					int selectedIndex = PiecePictureIndex1.Value;
+					string temp = PiecePictureList1[selectedIndex];
+					PiecePictureList1[selectedIndex] = PiecePictureList1[selectedIndex - 1];
+					PiecePictureList1[selectedIndex - 1] = temp;
+					PiecePictureIndex1.Value = selectedIndex - 1;
+				}
+				break;
+			case PiecePictureType.Base:
+				if (PiecePictureIndex2.Value == 0)
+					return;
+				{
+					int selectedIndex = PiecePictureIndex2.Value;
+					string temp = PiecePictureList2[selectedIndex];
+					PiecePictureList2[selectedIndex] = PiecePictureList2[selectedIndex - 1];
+					PiecePictureList2[selectedIndex - 1] = temp;
+					PiecePictureIndex2.Value = selectedIndex - 1;
+				}
+				break;
+			case PiecePictureType.Support:
+				if (PiecePictureIndex3.Value == 0)
+					return;
+				{
+					int selectedIndex = PiecePictureIndex3.Value;
+					string temp = PiecePictureList3[selectedIndex];
+					PiecePictureList3[selectedIndex] = PiecePictureList3[selectedIndex - 1];
+					PiecePictureList3[selectedIndex - 1] = temp;
+					PiecePictureIndex3.Value = selectedIndex - 1;
+				}
+				break;
+			}
+		}
+		// リストの選択項目を下に移動させる
+		private void MoveDownPiecePicture(PiecePictureType ppt) {
+			switch (ppt) {
+			case PiecePictureType.Main:
+				if (PiecePictureIndex1.Value >= PiecePictureList1.Count - 1 || PiecePictureIndex1.Value < 0)
+					return;
+				{
+					int selectedIndex = PiecePictureIndex1.Value;
+					string temp = PiecePictureList1[selectedIndex];
+					PiecePictureList1[selectedIndex] = PiecePictureList1[selectedIndex + 1];
+					PiecePictureList1[selectedIndex + 1] = temp;
+					PiecePictureIndex1.Value = selectedIndex + 1;
+				}
+				break;
+			case PiecePictureType.Base:
+				if (PiecePictureIndex2.Value >= PiecePictureList2.Count - 1 || PiecePictureIndex2.Value < 0)
+					return;
+				{
+					int selectedIndex = PiecePictureIndex2.Value;
+					string temp = PiecePictureList2[selectedIndex];
+					PiecePictureList2[selectedIndex] = PiecePictureList2[selectedIndex + 1];
+					PiecePictureList2[selectedIndex + 1] = temp;
+					PiecePictureIndex2.Value = selectedIndex + 1;
+				}
+				break;
+			case PiecePictureType.Support:
+				if (PiecePictureIndex3.Value >= PiecePictureList3.Count - 1 || PiecePictureIndex3.Value < 0)
+					return;
+				{
+					int selectedIndex = PiecePictureIndex3.Value;
+					string temp = PiecePictureList3[selectedIndex];
+					PiecePictureList3[selectedIndex] = PiecePictureList3[selectedIndex + 1];
+					PiecePictureList3[selectedIndex + 1] = temp;
+					PiecePictureIndex3.Value = selectedIndex + 1;
+				}
+				break;
 			}
 		}
 
@@ -100,12 +168,12 @@ namespace KFC
 			DeletePiecePicture1Command.Subscribe(_ => { MessageBox.Show("画像削除"); });
 			DeletePiecePicture2Command.Subscribe(_ => { MessageBox.Show("画像削除"); });
 			DeletePiecePicture3Command.Subscribe(_ => { MessageBox.Show("画像削除"); });
-			MoveUpPiecePicture1Command.Subscribe(_ => { MessageBox.Show("上移動"); });
-			MoveUpPiecePicture2Command.Subscribe(_ => { MessageBox.Show("上移動"); });
-			MoveUpPiecePicture3Command.Subscribe(_ => { MessageBox.Show("上移動"); });
-			MoveDownPiecePicture1Command.Subscribe(_ => { MessageBox.Show("下移動"); });
-			MoveDownPiecePicture2Command.Subscribe(_ => { MessageBox.Show("下移動"); });
-			MoveDownPiecePicture3Command.Subscribe(_ => { MessageBox.Show("下移動"); });
+			MoveUpPiecePicture1Command.Subscribe(_ => { MoveUpPiecePicture(PiecePictureType.Main); });
+			MoveUpPiecePicture2Command.Subscribe(_ => { MoveUpPiecePicture(PiecePictureType.Base); });
+			MoveUpPiecePicture3Command.Subscribe(_ => { MoveUpPiecePicture(PiecePictureType.Support); });
+			MoveDownPiecePicture1Command.Subscribe(_ => { MoveDownPiecePicture(PiecePictureType.Main); });
+			MoveDownPiecePicture2Command.Subscribe(_ => { MoveDownPiecePicture(PiecePictureType.Base); });
+			MoveDownPiecePicture3Command.Subscribe(_ => { MoveDownPiecePicture(PiecePictureType.Support); });
 		}
 	}
 }
