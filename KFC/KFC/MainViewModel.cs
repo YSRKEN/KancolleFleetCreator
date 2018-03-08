@@ -54,6 +54,13 @@ namespace KFC
 			// プレビューなので、表示サイズに収まるように適当にリサイズする
 			PreviewImage.Value = (image != null ? image.WithSize(500, 500) : null);
 		}
+		public void DropPiecePicture(IEnumerable<Uri> uris, PiecePictureType ppt) {
+			foreach(var uri in uris) {
+				Console.WriteLine(uri.LocalPath);
+				AddPiecePicture(uri.LocalPath, ppt, false);
+			}
+			RedrawViewImage();
+		}
 		public void RedrawViewImage() {
 			SetPreViewImage(CreateFormationPicture());
 		}
@@ -75,10 +82,23 @@ namespace KFC
 		}
 		// 画像ファイルを追加する
 		// ただし種別による選別は施す(当てはまらない画像データはインポートしないように設定)
-		private void AddPiecePicture(GetFileName funcGFN, PiecePictureType ppt) {
-			string fileName = funcGFN();
+		private void AddPiecePicture(string fileName, PiecePictureType ppt, bool redrawFlg = true) {
 			if (fileName == "")
 				return;
+			switch (ppt) {
+			case PiecePictureType.Main:
+				if (PiecePictureList1.Count >= 12)
+					return;
+				break;
+			case PiecePictureType.Support:
+				if (PiecePictureList2.Count >= 12)
+					return;
+				break;
+			case PiecePictureType.Base:
+				if (PiecePictureList3.Count >= 3)
+					return;
+				break;
+			}
 			try {
 				var image = new Bitmap(fileName);
 				//
@@ -111,7 +131,8 @@ namespace KFC
 					PiecePictureList3.Add(key);
 					break;
 				}
-				RedrawViewImage();
+				if(redrawFlg)
+					RedrawViewImage();
 			} catch(Exception e) {
 				Console.WriteLine(e.Message);
 			}
@@ -338,6 +359,7 @@ namespace KFC
 
 		// コンストラクタ
 		public MainViewModel(GetFileName funcGFN) {
+			//
 			PreviewImageFlg = PreviewImage.Select(p => p != null).ToReadOnlyReactiveProperty();
 			//
 			ShowImageDataFlg1.Subscribe(_ => RedrawViewImage());
@@ -346,9 +368,9 @@ namespace KFC
 			//
 			CreateFormationPictureCommand.Subscribe(_ => { MessageBox.Show("画像作成"); });
 			DeleteDataAllCommand.Subscribe(_ => { MessageBox.Show("全消去"); });
-			AddPiecePicture1Command.Subscribe(_ => { AddPiecePicture(funcGFN, PiecePictureType.Main); });
-			AddPiecePicture2Command.Subscribe(_ => { AddPiecePicture(funcGFN, PiecePictureType.Support); });
-			AddPiecePicture3Command.Subscribe(_ => { AddPiecePicture(funcGFN, PiecePictureType.Base); });
+			AddPiecePicture1Command.Subscribe(_ => { AddPiecePicture(funcGFN(), PiecePictureType.Main); });
+			AddPiecePicture2Command.Subscribe(_ => { AddPiecePicture(funcGFN(), PiecePictureType.Support); });
+			AddPiecePicture3Command.Subscribe(_ => { AddPiecePicture(funcGFN(), PiecePictureType.Base); });
 			DeletePiecePicture1Command.Subscribe(_ => { DeletePiecePicture(PiecePictureType.Main); });
 			DeletePiecePicture2Command.Subscribe(_ => { DeletePiecePicture(PiecePictureType.Support); });
 			DeletePiecePicture3Command.Subscribe(_ => { DeletePiecePicture(PiecePictureType.Base); });

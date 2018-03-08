@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Eto.Forms;
 using Eto.Drawing;
 using Eto.Serialization.Xaml;
+using System.Linq;
 
 namespace KFC
 {
@@ -37,6 +38,15 @@ namespace KFC
 			=> (this.DataContext as MainViewModel).DeletePiecePicture2Command.Execute();
 		protected void DeletePiecePicture3(object sender, EventArgs e)
 			=> (this.DataContext as MainViewModel).DeletePiecePicture3Command.Execute();
+		protected void DropFiles1(object sender, DragEventArgs e) {
+			(this.DataContext as MainViewModel).DropPiecePicture(e.Data.Uris, Utility.PiecePictureType.Main);
+		}
+		protected void DropFiles2(object sender, DragEventArgs e) {
+			(this.DataContext as MainViewModel).DropPiecePicture(e.Data.Uris, Utility.PiecePictureType.Support);
+		}
+		protected void DropFiles3(object sender, DragEventArgs e) {
+			(this.DataContext as MainViewModel).DropPiecePicture(e.Data.Uris, Utility.PiecePictureType.Base);
+		}
 		protected void HandleAbout(object sender, EventArgs e) {
 			var dialog = new AboutDialog() {
 				Title = "ÉoÅ[ÉWÉáÉìèÓïÒ",
