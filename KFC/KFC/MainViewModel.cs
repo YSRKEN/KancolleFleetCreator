@@ -273,8 +273,19 @@ namespace KFC
 			var image1 = (imageFlg1 ? CreateFormationPicture1() : null);
 			var image2 = (imageFlg2 ? CreateFormationPicture2() : null);
 			var image3 = (imageFlg3 ? CreateFormationPicture3() : null);
-			// 画像を合成して、まとめ画像を作成する(スタブ)
+			// 画像を合成して、まとめ画像を作成する
 			var combineImage = image1;
+			if (combineImage == null) {
+				combineImage = image2;
+			} else if(image2 != null) {
+				combineImage = new Bitmap(image1.Width + image2.Width, Math.Max(image1.Height, image2.Height), PixelFormat.Format24bppRgb);
+				using(var g = new Graphics(combineImage)) {
+					g.DrawImage(image1, 0, 0);
+					g.DrawImage(image2, image1.Width, 0);
+				}
+			}
+			if (combineImage == null)
+				combineImage = image3;
 			return combineImage;
 		}
 		private Bitmap CreateFormationPicture1() {
