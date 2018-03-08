@@ -300,6 +300,8 @@ namespace KFC
 					using(var g = new Graphics(image)) {
 						var image2 = piecePictureData[PiecePictureList1[i]];
 						g.DrawImage(image2.Clone(blockRect), x, y);
+						g.DrawText(new Font(SystemFont.Bold, 48), Colors.White, 455 - 56 * 2 + x + 4, 0 + y + 4, $"1-{i + 1}");
+						g.DrawText(new Font(SystemFont.Bold, 48), Colors.Red, 455 - 56 * 2 + x, 0 + y, $"1-{i + 1}");
 					}
 				}
 				for (int i = PiecePictureList1.Count - 6; i < PiecePictureList1.Count; ++i) {
@@ -308,6 +310,8 @@ namespace KFC
 					using (var g = new Graphics(image)) {
 						var image2 = piecePictureData[PiecePictureList1[i]];
 						g.DrawImage(image2.Clone(blockRect), x, y);
+						g.DrawText(new Font(SystemFont.Bold, 48), Colors.White, 455 - 56 * 2 + x + 4, 0 + y + 4, $"2-{i2 + 1}");
+						g.DrawText(new Font(SystemFont.Bold, 48), Colors.Red, 455 - 56 * 2 + x, 0 + y, $"2-{i2 + 1}");
 					}
 				}
 				return image;
@@ -321,6 +325,8 @@ namespace KFC
 					using (var g = new Graphics(image)) {
 						var image2 = piecePictureData[PiecePictureList1[i]];
 						g.DrawImage(image2.Clone(blockRect), x, y);
+						g.DrawText(new Font(SystemFont.Bold, 48), Colors.White, 455 - 48 + x + 4, 0 + y + 4, $"{i + 1}");
+						g.DrawText(new Font(SystemFont.Bold, 48), Colors.Red, 455 - 48 + x, 0 + y, $"{i+1}");
 					}
 				}
 				return image;
