@@ -31,6 +31,12 @@ namespace KFC
 			=> (this.DataContext as MainViewModel).CreateFormationPictureCommand.Execute();
 		protected void DeleteDataAll(object sender, EventArgs e)
 			=> (this.DataContext as MainViewModel).DeleteDataAllCommand.Execute();
+		protected void DeletePiecePicture1(object sender, EventArgs e)
+			=> (this.DataContext as MainViewModel).DeletePiecePicture1Command.Execute();
+		protected void DeletePiecePicture2(object sender, EventArgs e)
+			=> (this.DataContext as MainViewModel).DeletePiecePicture2Command.Execute();
+		protected void DeletePiecePicture3(object sender, EventArgs e)
+			=> (this.DataContext as MainViewModel).DeletePiecePicture3Command.Execute();
 		protected void HandleAbout(object sender, EventArgs e) {
 			var dialog = new AboutDialog() {
 				Title = "ƒo[ƒWƒ‡ƒ“î•ñ",

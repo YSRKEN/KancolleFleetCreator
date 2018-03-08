@@ -62,7 +62,17 @@ namespace KFC
 				return;
 			try {
 				var image = new Bitmap(fileName);
-				piecePictureData[fileName] = image;
+				string key = System.IO.Path.GetFileNameWithoutExtension(fileName);
+				if (piecePictureData.ContainsKey(key)) {
+					for(int i = 1; ; ++i) {
+						string key2 = $"{key}_{i}";
+						if (!piecePictureData.ContainsKey(key2)) {
+							key = key2;
+							break;
+						}
+					}
+				}
+				piecePictureData[key] = image;
 				switch (ppt) {
 				case PiecePictureType.Main:
 					PiecePictureList1.Add(key);
@@ -154,6 +164,44 @@ namespace KFC
 				break;
 			}
 		}
+		// リストの選択項目を削除する
+		private void DeletePiecePicture(PiecePictureType ppt) {
+			switch (ppt) {
+			case PiecePictureType.Main:
+				if (PiecePictureIndex1.Value < 0)
+					return;
+				{
+					int selectedIndex = PiecePictureIndex1.Value;
+					string temp = PiecePictureList1[selectedIndex];
+					PiecePictureList1.RemoveAt(selectedIndex);
+					piecePictureData.Remove(temp);
+					PiecePictureIndex1.Value = Math.Min(selectedIndex, PiecePictureList1.Count - 1);
+				}
+				break;
+			case PiecePictureType.Base:
+				if (PiecePictureIndex2.Value < 0)
+					return;
+				{
+					int selectedIndex = PiecePictureIndex2.Value;
+					string temp = PiecePictureList2[selectedIndex];
+					PiecePictureList2.RemoveAt(selectedIndex);
+					piecePictureData.Remove(temp);
+					PiecePictureIndex2.Value = Math.Min(selectedIndex, PiecePictureList2.Count - 1);
+				}
+				break;
+			case PiecePictureType.Support:
+				if (PiecePictureIndex3.Value < 0)
+					return;
+				{
+					int selectedIndex = PiecePictureIndex3.Value;
+					string temp = PiecePictureList3[selectedIndex];
+					PiecePictureList3.RemoveAt(selectedIndex);
+					piecePictureData.Remove(temp);
+					PiecePictureIndex3.Value = Math.Min(selectedIndex, PiecePictureList3.Count - 1);
+				}
+				break;
+			}
+		}
 
 		// コンストラクタ
 		public MainViewModel(GetFileName funcGFN) {
@@ -165,9 +213,9 @@ namespace KFC
 			AddPiecePicture1Command.Subscribe(_ => { AddPiecePicture(funcGFN, PiecePictureType.Main); });
 			AddPiecePicture2Command.Subscribe(_ => { AddPiecePicture(funcGFN, PiecePictureType.Base); });
 			AddPiecePicture3Command.Subscribe(_ => { AddPiecePicture(funcGFN, PiecePictureType.Support); });
-			DeletePiecePicture1Command.Subscribe(_ => { MessageBox.Show("画像削除"); });
-			DeletePiecePicture2Command.Subscribe(_ => { MessageBox.Show("画像削除"); });
-			DeletePiecePicture3Command.Subscribe(_ => { MessageBox.Show("画像削除"); });
+			DeletePiecePicture1Command.Subscribe(_ => { DeletePiecePicture(PiecePictureType.Main); });
+			DeletePiecePicture2Command.Subscribe(_ => { DeletePiecePicture(PiecePictureType.Base); });
+			DeletePiecePicture3Command.Subscribe(_ => { DeletePiecePicture(PiecePictureType.Support); });
 			MoveUpPiecePicture1Command.Subscribe(_ => { MoveUpPiecePicture(PiecePictureType.Main); });
 			MoveUpPiecePicture2Command.Subscribe(_ => { MoveUpPiecePicture(PiecePictureType.Base); });
 			MoveUpPiecePicture3Command.Subscribe(_ => { MoveUpPiecePicture(PiecePictureType.Support); });
