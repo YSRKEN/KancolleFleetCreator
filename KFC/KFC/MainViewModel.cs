@@ -344,6 +344,8 @@ namespace KFC
 					using (var g = new Graphics(image)) {
 						var image2 = piecePictureData[PiecePictureList2[i]];
 						g.DrawImage(image2.Clone(blockRect), x, y);
+						g.DrawText(new Font(SystemFont.Bold, 48), Colors.White, 455 - 56 * 2 + x + 4, 0 + y + 4, $"1-{i + 1}");
+						g.DrawText(new Font(SystemFont.Bold, 48), Colors.Blue, 455 - 56 * 2 + x, 0 + y, $"1-{i + 1}");
 					}
 				}
 				for (int i = PiecePictureList2.Count - 6; i < PiecePictureList2.Count; ++i) {
@@ -352,6 +354,9 @@ namespace KFC
 					using (var g = new Graphics(image)) {
 						var image2 = piecePictureData[PiecePictureList2[i]];
 						g.DrawImage(image2.Clone(blockRect), x, y);
+						g.DrawText(new Font(SystemFont.Bold, 48), Colors.White, 455 - 56 * 2 + x + 4, 0 + y + 4, $"2-{i2 + 1}");
+						g.DrawText(new Font(SystemFont.Bold, 48), Colors.Blue, 455 - 56 * 2 + x, 0 + y, $"2-{i2 + 1}");
+
 					}
 				}
 				return image;
@@ -365,6 +370,8 @@ namespace KFC
 					using (var g = new Graphics(image)) {
 						var image2 = piecePictureData[PiecePictureList2[i]];
 						g.DrawImage(image2.Clone(blockRect), x, y);
+						g.DrawText(new Font(SystemFont.Bold, 48), Colors.White, 455 - 48 + x + 4, 0 + y + 4, $"{i + 1}");
+						g.DrawText(new Font(SystemFont.Bold, 48), Colors.Blue, 455 - 48 + x, 0 + y, $"{i + 1}");
 					}
 				}
 				return image;
@@ -375,7 +382,7 @@ namespace KFC
 		}
 
 		// コンストラクタ
-		public MainViewModel(GetFileName funcGFN) {
+		public MainViewModel(GetFileName funcGFN1, GetFileName funcGFN2) {
 			//
 			PreviewImageFlg = PreviewImage.Select(p => p != null).ToReadOnlyReactiveProperty();
 			//
@@ -383,11 +390,22 @@ namespace KFC
 			ShowImageDataFlg2.Subscribe(_ => RedrawViewImage());
 			ShowImageDataFlg3.Subscribe(_ => RedrawViewImage());
 			//
-			CreateFormationPictureCommand.Subscribe(_ => { MessageBox.Show("画像作成"); });
+			CreateFormationPictureCommand.Subscribe(_ => {
+				var image = CreateFormationPicture();
+				if (image == null)
+					return;
+				string filePath = funcGFN2();
+				if (filePath != "") {
+					if(System.IO.Path.GetExtension(filePath) != ".png") {
+						filePath += ".png";
+					}
+					image.Save(filePath, ImageFormat.Png);
+				}
+			});
 			DeleteDataAllCommand.Subscribe(_ => { MessageBox.Show("全消去"); });
-			AddPiecePicture1Command.Subscribe(_ => { AddPiecePicture(funcGFN(), PiecePictureType.Main); });
-			AddPiecePicture2Command.Subscribe(_ => { AddPiecePicture(funcGFN(), PiecePictureType.Support); });
-			AddPiecePicture3Command.Subscribe(_ => { AddPiecePicture(funcGFN(), PiecePictureType.Base); });
+			AddPiecePicture1Command.Subscribe(_ => { AddPiecePicture(funcGFN1(), PiecePictureType.Main); });
+			AddPiecePicture2Command.Subscribe(_ => { AddPiecePicture(funcGFN1(), PiecePictureType.Support); });
+			AddPiecePicture3Command.Subscribe(_ => { AddPiecePicture(funcGFN1(), PiecePictureType.Base); });
 			DeletePiecePicture1Command.Subscribe(_ => { DeletePiecePicture(PiecePictureType.Main); });
 			DeletePiecePicture2Command.Subscribe(_ => { DeletePiecePicture(PiecePictureType.Support); });
 			DeletePiecePicture3Command.Subscribe(_ => { DeletePiecePicture(PiecePictureType.Base); });

@@ -67,7 +67,6 @@
 	<Form.Menu>
 		<MenuBar>
 			<ButtonMenuItem Text="F&amp;ile">
-				<ButtonMenuItem Text="画像追加(&amp;L)" Click="LoadPiecePicture" />
 				<ButtonMenuItem Text="画像作成(&amp;C)" Click="CreateFormationPicture" />
 				<ButtonMenuItem Text="全消去(&amp;A)" Click="DeleteDataAll" />
 			</ButtonMenuItem>
@@ -81,8 +80,6 @@
 	</Form.Menu>
 	<Form.ToolBar>
 		<ToolBar>
-			<ButtonToolItem Text="画像追加" Click="LoadPiecePicture" />
-			<SeparatorToolItem/>
 			<ButtonToolItem Text="画像作成" Click="CreateFormationPicture" />
 			<SeparatorToolItem/>
 			<ButtonToolItem Text="全消去" Click="DeleteDataAll" />
