@@ -264,6 +264,30 @@ namespace KFC
 				break;
 			}
 		}
+		// 1枚目の画像の右に2枚目の画像を繋げる
+		private Bitmap HorizonalJoinBitmap(Bitmap b1, Bitmap b2) {
+			var joinImage = new Bitmap(
+					b1.Width + b2.Width,
+					Math.Max(b1.Height, b2.Height),
+					PixelFormat.Format24bppRgb);
+			using (var g = new Graphics(joinImage)) {
+				g.DrawImage(b1, 0, 0);
+				g.DrawImage(b2, b1.Width, 0);
+			}
+			return joinImage;
+		}
+		// 1枚目の画像の下に2枚目の画像を繋げる
+		private Bitmap VerticalJoinBitmap(Bitmap b1, Bitmap b2) {
+			var joinImage = new Bitmap(
+					Math.Max(b1.Width, b2.Width),
+					b1.Height + b2.Height,
+					PixelFormat.Format24bppRgb);
+			using (var g = new Graphics(joinImage)) {
+				g.DrawImage(b1, 0, 0);
+				g.DrawImage(b2, 0, b1.Height);
+			}
+			return joinImage;
+		}
 		// 画像を再構成する
 		private Bitmap CreateFormationPicture() {
 			bool imageFlg1 = (ShowImageDataFlg1.Value && PiecePictureList1.Count > 0);
@@ -280,20 +304,22 @@ namespace KFC
 			if (image3 != null && ((image1 != null && image1.Height > image3.Height) || (image2 != null && image2.Height > image3.Height)))
 				image3 = CreateFormationPicture3(true);
 			// 画像を合成して、まとめ画像を作成する
-			var imageList = new[] { image1, image2, image3 }.Where(i => i != null).ToList();
-			if (imageList.Count == 1)
-				return imageList.First();
-			var combineImage = imageList[0];
-			for(int i = 1; i < imageList.Count; ++i) {
-				var combineImage2 = new Bitmap(
-					combineImage.Width + imageList[i].Width,
-					Math.Max(combineImage.Height, imageList[i].Height),
-					PixelFormat.Format24bppRgb);
-				using (var g = new Graphics(combineImage2)) {
-					g.DrawImage(combineImage, 0, 0);
-					g.DrawImage(imageList[i], combineImage.Width, 0);
+			//自艦隊と支援艦隊を合体
+			Bitmap combineImage = image1;
+			if(image1 == null) {
+				combineImage = image2;
+			}else if(image2 != null) {
+				if(PiecePictureList1.Count >= 8 && PiecePictureList2.Count >= 7) {
+					// 連合艦隊＆ダブル支援艦隊の時だけ縦結合
+					combineImage = VerticalJoinBitmap(combineImage, image2);
+				} else {
+					// そうでない時は横結合
+					combineImage = HorizonalJoinBitmap(combineImage, image2);
 				}
-				combineImage = combineImage2;
+			}
+			// 基地航空隊を結合
+			if(image3 != null) {
+				combineImage = HorizonalJoinBitmap(combineImage, image3);
 			}
 			return combineImage;
 		}
