@@ -45,6 +45,9 @@ namespace KFC
 		public ReactiveCommand MoveDownPiecePicture1Command { get; } = new ReactiveCommand();
 		public ReactiveCommand MoveDownPiecePicture2Command { get; } = new ReactiveCommand();
 		public ReactiveCommand MoveDownPiecePicture3Command { get; } = new ReactiveCommand();
+		public ReactiveCommand DeletePiecePictureAll1Command { get; } = new ReactiveCommand();
+		public ReactiveCommand DeletePiecePictureAll2Command { get; } = new ReactiveCommand();
+		public ReactiveCommand DeletePiecePictureAll3Command { get; } = new ReactiveCommand();
 
 		// コレクション
 		public ReactiveCollection<string> PiecePictureList1 { get; } = new ReactiveCollection<string>();
@@ -411,6 +414,48 @@ namespace KFC
 				return image;
 			}
 		}
+		// リストを全消去する
+		// リストの選択項目を削除する
+		private void DeletePiecePictureAll(PiecePictureType ppt) {
+			switch (ppt) {
+			case PiecePictureType.Main:
+				if (PiecePictureList1.Count == 0)
+					return;
+				{
+					foreach(string name in PiecePictureList1) {
+						piecePictureData.Remove(name);
+					}
+					PiecePictureList1.Clear();
+					PiecePictureIndex1.Value = -1;
+					RedrawViewImage();
+				}
+				break;
+			case PiecePictureType.Support:
+				if (PiecePictureList2.Count == 0)
+					return;
+				{
+					foreach(string name in PiecePictureList2) {
+						piecePictureData.Remove(name);
+					}
+					PiecePictureList2.Clear();
+					PiecePictureIndex2.Value = -1;
+					RedrawViewImage();
+				}
+				break;
+			case PiecePictureType.Base:
+				if (PiecePictureList3.Count == 0)
+				return;
+				{
+					foreach (string name in PiecePictureList3) {
+						piecePictureData.Remove(name);
+					}
+					PiecePictureList3.Clear();
+					PiecePictureIndex3.Value = -1;
+					RedrawViewImage();
+				}
+				break;
+			}
+		}
 
 		// コンストラクタ
 		public MainViewModel(GetFileName funcGFN1, GetFileName funcGFN2) {
@@ -455,6 +500,9 @@ namespace KFC
 			MoveDownPiecePicture1Command.Subscribe(_ => { MoveDownPiecePicture(PiecePictureType.Main); });
 			MoveDownPiecePicture2Command.Subscribe(_ => { MoveDownPiecePicture(PiecePictureType.Support); });
 			MoveDownPiecePicture3Command.Subscribe(_ => { MoveDownPiecePicture(PiecePictureType.Base); });
+			DeletePiecePictureAll1Command.Subscribe(_ => { DeletePiecePictureAll(PiecePictureType.Main); });
+			DeletePiecePictureAll2Command.Subscribe(_ => { DeletePiecePictureAll(PiecePictureType.Support); });
+			DeletePiecePictureAll3Command.Subscribe(_ => { DeletePiecePictureAll(PiecePictureType.Base); });
 		}
 	}
 }
