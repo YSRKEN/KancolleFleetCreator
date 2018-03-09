@@ -4,6 +4,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="艦これ編成まとめ隊"
 	Padding="10"
+	Topmost="True"
 	>
 	<StackLayout>
 		<StackLayout Orientation="Horizontal" Spacing="5">

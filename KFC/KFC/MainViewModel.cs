@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -272,20 +273,25 @@ namespace KFC
 			// 自艦隊・支援艦隊・基地航空隊の画像を作成する
 			var image1 = (imageFlg1 ? CreateFormationPicture1() : null);
 			var image2 = (imageFlg2 ? CreateFormationPicture2() : null);
-			var image3 = (imageFlg3 ? CreateFormationPicture3() : null);
+			var image3 = (imageFlg3 ? CreateFormationPicture3(false) : null);
+			if (image3 != null && ((image1 != null && image1.Height > image3.Height) || (image2 != null && image2.Height > image3.Height)))
+				image3 = CreateFormationPicture3(true);
 			// 画像を合成して、まとめ画像を作成する
-			var combineImage = image1;
-			if (combineImage == null) {
-				combineImage = image2;
-			} else if(image2 != null) {
-				combineImage = new Bitmap(image1.Width + image2.Width, Math.Max(image1.Height, image2.Height), PixelFormat.Format24bppRgb);
-				using(var g = new Graphics(combineImage)) {
-					g.DrawImage(image1, 0, 0);
-					g.DrawImage(image2, image1.Width, 0);
+			var imageList = new[] { image1, image2, image3 }.Where(i => i != null).ToList();
+			if (imageList.Count == 1)
+				return imageList.First();
+			var combineImage = imageList[0];
+			for(int i = 1; i < imageList.Count; ++i) {
+				var combineImage2 = new Bitmap(
+					combineImage.Width + imageList[i].Width,
+					Math.Max(combineImage.Height, imageList[i].Height),
+					PixelFormat.Format24bppRgb);
+				using (var g = new Graphics(combineImage2)) {
+					g.DrawImage(combineImage, 0, 0);
+					g.DrawImage(imageList[i], combineImage.Width, 0);
 				}
+				combineImage = combineImage2;
 			}
-			if (combineImage == null)
-				combineImage = image3;
 			return combineImage;
 		}
 		private Bitmap CreateFormationPicture1() {
@@ -377,8 +383,33 @@ namespace KFC
 				return image;
 			}
 		}
-		private Bitmap CreateFormationPicture3() {
-			return null;
+		private Bitmap CreateFormationPicture3(bool tateFlg) {
+			var blockRect = new Rectangle(575, 109, 225, 358);
+			if (tateFlg) {
+				var image = new Bitmap(blockRect.Width, blockRect.Height * PiecePictureList3.Count, PixelFormat.Format24bppRgb);
+				using (var g = new Graphics(image)) {
+					for (int i = 0; i < PiecePictureList3.Count; ++i) {
+						var image2 = piecePictureData[PiecePictureList3[i]];
+						int x = 0, y = i * blockRect.Height;
+						g.DrawImage(image2.Clone(blockRect), x, y);
+						g.DrawText(new Font(SystemFont.Bold, 48), Colors.White, blockRect.Width - 48 + x + 4, y + 4, $"{i + 1}");
+						g.DrawText(new Font(SystemFont.Bold, 48), Colors.Green, blockRect.Width - 48 + x, y, $"{i + 1}");
+					}
+				}
+				return image;
+			} else {
+				var image = new Bitmap(blockRect.Width * (PiecePictureList3.Count < 3 ? 1 : 2), blockRect.Height * (PiecePictureList3.Count < 2 ? 1 : 2), PixelFormat.Format24bppRgb);
+				using (var g = new Graphics(image)) {
+					for (int i = 0; i < PiecePictureList3.Count; ++i) {
+						var image2 = piecePictureData[PiecePictureList3[i]];
+						int x = (i / 2) * blockRect.Width, y = (i % 2) * blockRect.Height;
+						g.DrawImage(image2.Clone(blockRect), x, y);
+						g.DrawText(new Font(SystemFont.Bold, 48), Colors.White, blockRect.Width - 48 + x + 4, y + 4, $"{i + 1}");
+						g.DrawText(new Font(SystemFont.Bold, 48), Colors.Green, blockRect.Width - 48 + x, y, $"{i + 1}");
+					}
+				}
+				return image;
+			}
 		}
 
 		// コンストラクタ
@@ -402,7 +433,16 @@ namespace KFC
 					image.Save(filePath, ImageFormat.Png);
 				}
 			});
-			DeleteDataAllCommand.Subscribe(_ => { MessageBox.Show("全消去"); });
+			DeleteDataAllCommand.Subscribe(_ => {
+				var result = MessageBox.Show("リストの画像を全て消去しますか？", "編成まとめ隊", MessageBoxButtons.YesNo, MessageBoxType.Question);
+				if(result == DialogResult.Yes) {
+					piecePictureData.Clear();
+					PiecePictureList1.Clear();
+					PiecePictureList2.Clear();
+					PiecePictureList3.Clear();
+					RedrawViewImage();
+				}
+			});
 			AddPiecePicture1Command.Subscribe(_ => { AddPiecePicture(funcGFN1(), PiecePictureType.Main); });
 			AddPiecePicture2Command.Subscribe(_ => { AddPiecePicture(funcGFN1(), PiecePictureType.Support); });
 			AddPiecePicture3Command.Subscribe(_ => { AddPiecePicture(funcGFN1(), PiecePictureType.Base); });
