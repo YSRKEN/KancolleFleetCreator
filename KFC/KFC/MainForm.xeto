@@ -6,7 +6,6 @@
 	Padding="10"
 	Width="550"
 	Height="850"
-	Topmost="True"
 	>
 	<StackLayout>
 		<StackLayout Orientation="Horizontal" Spacing="5">

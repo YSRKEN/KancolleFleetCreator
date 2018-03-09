@@ -43,7 +43,7 @@ namespace KFC
 			var dialog = new AboutDialog() {
 				Title = "ƒo[ƒWƒ‡ƒ“î•ñ",
 				ProgramName = "ŠÍ‚±‚ê•Ò¬‚Ü‚Æ‚ß‘à", License = "MIT License",
-				Website = new Uri("https://github.com/YSRKEN/"), WebsiteLabel = "GitHub"
+				Website = new Uri("https://github.com/YSRKEN/KancolleFleetCreator"), WebsiteLabel = "GitHub",
 			};
 			dialog.ShowDialog(this);
 		}
